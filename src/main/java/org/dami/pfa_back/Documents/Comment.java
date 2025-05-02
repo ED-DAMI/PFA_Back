@@ -1,9 +1,6 @@
 package org.dami.pfa_back.Documents;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -16,7 +13,7 @@ public class Comment {
     private String userId;
     private String songId;
     private String text;
-    private int rating; // 1 à 5
+    private int rating;
     private Date createdAt;
 
     public Comment(String id, String userId, String songId, String text, int rating, Date createdAt) {
