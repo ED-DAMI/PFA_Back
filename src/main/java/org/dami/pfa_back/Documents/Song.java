@@ -10,6 +10,25 @@ import java.util.Date;
 import java.util.List;
 @Document(indexName = "songs")
 public class Song {
+    @Override
+    public String toString() {
+        return "Song{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
+                ", genre='" + genre + '\'' +
+                ", duration=" + duration +
+                ", releaseDate=" + releaseDate +
+                ", language='" + language + '\'' +
+                ", urlAudio='" + urlAudio + '\'' +
+                ", coverImage='" + coverImage + '\'' +
+                ", tags=" + tags +
+                ", lyrics='" + lyrics + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
     @Id
     private String id;
     private String title;

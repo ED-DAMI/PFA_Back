@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/playlists")
@@ -19,8 +21,12 @@ public class PlaylistController {
     private PlaylistService playlistService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Playlist>> getAllPlaylists() {
-        return ResponseEntity.ok(playlistService.findAll());
+    public ResponseEntity<List<Playlist>> getAllPlaylists() {
+        return ResponseEntity
+                .ok(StreamSupport
+                        .stream(
+                                playlistService.findAll().spliterator()
+                                ,false).toList());
     }
 
     @GetMapping("/{id}")
@@ -31,7 +37,7 @@ public class PlaylistController {
     @PostMapping
     public ResponseEntity<Playlist> createPlaylist(
             @RequestBody Playlist request,
-            @AuthenticationPrincipal User user // ou récupérer depuis SecurityContext
+            @AuthenticationPrincipal User user
     ) {
         return ResponseEntity.ok(playlistService.createPlaylist(user, request));
     }

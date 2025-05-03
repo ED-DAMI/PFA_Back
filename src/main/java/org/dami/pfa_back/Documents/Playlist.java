@@ -22,6 +22,16 @@ public class Playlist {
     public Playlist() {
     }
 
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public Playlist setUserID(String userID) {
+        this.userID = userID;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Playlist{" +
@@ -71,14 +81,7 @@ public class Playlist {
         return this;
     }
 
-    public String getuserID() {
-        return userID;
-    }
 
-    public Playlist setuserID(String ownerId) {
-        this.userID = ownerId;
-        return this;
-    }
 
     public boolean isPublic() {
         return isPublic;

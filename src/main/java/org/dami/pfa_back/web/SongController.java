@@ -6,8 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+
+import static java.util.stream.StreamSupport.stream;
+
 @RestController
 @RequestMapping("/api/songs")
+
 public class SongController {
 
 
@@ -17,9 +23,11 @@ public class SongController {
         this.songService = songService;
     }
 
-    @GetMapping
-    public ResponseEntity<Iterable<Song>> getAllSongs() {
-        return ResponseEntity.ok(songService.findAll());
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<Song>> getAllSongs(@RequestHeader(value = "Authorization",required = false) String token) {
+        System.out.println(token);
+        return ResponseEntity.ok( stream(songService.findAll().spliterator(),false)
+                .toList());
     }
 
     @GetMapping("/{id}")

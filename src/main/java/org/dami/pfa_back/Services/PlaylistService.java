@@ -5,7 +5,7 @@ import org.dami.pfa_back.Documents.Song;
 import org.dami.pfa_back.Documents.User;
 import org.dami.pfa_back.Repository.PlaylistRepo;
 import org.dami.pfa_back.Repository.SongRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,11 +14,16 @@ import java.util.List;
 @Service
 public class PlaylistService {
 
-    @Autowired
-    private PlaylistRepo playlistRepository;
 
-    @Autowired
-    private SongRepo songRepository;
+    private final PlaylistRepo playlistRepository;
+
+
+    private final SongRepo songRepository;
+
+    public PlaylistService(PlaylistRepo playlistRepository, SongRepo songRepository) {
+        this.playlistRepository = playlistRepository;
+        this.songRepository = songRepository;
+    }
 
     public Iterable<Playlist> findAll() {
         return playlistRepository.findAll();
@@ -32,7 +37,7 @@ public class PlaylistService {
     public Playlist createPlaylist(User user, Playlist request) {
         Playlist playlist = new Playlist();
         playlist.setName(request.getName());
-        playlist.setuserID(user.getId());
+        playlist.setUserID(user.getId());
         playlist.setSongs(new ArrayList<>());
         return playlistRepository.save(playlist);
     }

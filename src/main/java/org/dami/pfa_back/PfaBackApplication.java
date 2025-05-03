@@ -1,6 +1,8 @@
 package org.dami.pfa_back;
 
+import org.dami.pfa_back.Documents.Playlist;
 import org.dami.pfa_back.Documents.Song; // Importer la classe Song correcte
+import org.dami.pfa_back.Repository.PlaylistRepo;
 import org.dami.pfa_back.Repository.SongRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,10 +21,5 @@ public class PfaBackApplication {
         SpringApplication.run(PfaBackApplication.class, args);
     }
 
-  //  @Bean
-    CommandLineRunner start(SongRepo songRepo) { // Injection de SongRepo
-        return args -> {
 
-        };
-    }
 }
