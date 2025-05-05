@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    // Injecter les chemins des répertoires pour les utiliser dans addResourceHandlers
     @Value("${upload.audio.dir:uploads/audio/}")
     private String audioUploadDir;
 
@@ -28,17 +27,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(false) // Désactiver les cookies (sinon `*` n'est pas autorisé)
                 .maxAge(3600);
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Servir les fichiers audio
-        String resolvedAudioDir = Paths.get(audioUploadDir).toAbsolutePath().normalize().toString();
-        registry.addResourceHandler("/files/audio/**")
-                .addResourceLocations("file:" + resolvedAudioDir + File.separator); // Utiliser File.separator pour la compatibilité OS
-
-        // Servir les fichiers image
-        String resolvedImageDir = Paths.get(imageUploadDir).toAbsolutePath().normalize().toString();
-        registry.addResourceHandler("/files/images/**")
-                // IMPORTANT: "file:" est nécessaire pour indiquer un chemin système
-                .addResourceLocations("file:" + resolvedImageDir + File.separator); // Utiliser File.separator
+        registry.addResourceHandler("/media/**")
+                .addResourceLocations("file:uploads/"); // Le dossier "uploads" est à la racine du projet
     }
 }

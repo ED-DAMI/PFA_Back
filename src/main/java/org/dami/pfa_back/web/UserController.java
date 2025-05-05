@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/playlists")
-    public ResponseEntity<List<PlaylistDTO>> getMyPlaylists(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<PlaylistDTO>> getMyPlaylists(@RequestHeader(value = "Authorization",required = false) String token) {
         if (playlistService.findAll() == null)
             throw new RuntimeException(" reposotory.findall is null");
         return ResponseEntity

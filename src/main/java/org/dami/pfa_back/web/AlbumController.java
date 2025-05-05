@@ -52,11 +52,6 @@ public class AlbumController {
             album.setReleaseDate(new Date());
         }
 
-        // TODO: Valider que l'artistId existe (si nécessaire)
-        // if (!artistRepository.existsById(album.getArtistId())) {
-        //     return ResponseEntity.badRequest().body("Artist ID not found"); // Exemple d'erreur
-        // }
-        // TODO: Ajouter la validation des autres champs
 
         try {
             Album savedAlbum = albumRepository.save(album);
