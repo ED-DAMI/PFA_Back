@@ -25,18 +25,10 @@ public class Album {
 
     private Date releaseDate;
 
-    // L'URL de l'image de couverture de l'album
     private String coverImage;
 
-    // --- Constructeurs ---
-
-    /**
-     * Constructeur par défaut (sans arguments).
-     * Nécessaire pour certains frameworks (comme Jackson pour la désérialisation JSON
-     * ou Spring Data pour créer des instances à partir de la base de données).
-     */
     public Album() {
-        // Constructeur vide
+
     }
 
     /**

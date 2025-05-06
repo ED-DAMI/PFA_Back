@@ -83,7 +83,7 @@ public class SongService {
      * @throws EntityNotFoundException Si la chanson ou la référence au fichier audio est manquante.
      * @throws MalformedURLException Si l'URL de la ressource ne peut être formée.
      */
-    public Resource getAudioResourceById(String id, String token) throws MalformedURLException {
+    public Resource getAudioResourceById(String id, String token) throws IOException {
         System.out.println("Received token in getAudioResourceById for song " + id + " (validation external): " + token);
 
         Song song = songRepository.findById(id)
@@ -108,7 +108,7 @@ public class SongService {
      * @throws EntityNotFoundException Si la chanson ou la référence au fichier image est manquante.
      * @throws MalformedURLException Si l'URL de la ressource ne peut être formée.
      */
-    public Resource getImageResourceById(String id, String token) throws MalformedURLException {
+    public Resource getImageResourceById(String id, String token) throws IOException {
 
         Song song = songRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Song not found with id: " + id));

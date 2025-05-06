@@ -12,10 +12,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -30,40 +28,13 @@ public class PfaBackApplication {
     public static void main(String[] args) {
         SpringApplication.run(PfaBackApplication.class, args);
     }
-
+    @Bean
     CommandLineRunner start(SongRepo repo){
         return args ->{
-            repo.deleteAll();
-            Song song1 = new Song();
-            song1.setTitle("Shape of You");
-            song1.setArtist("Ed Sheeran");
-            song1.setGenre("Pop");
-            song1.setAlbum("Divide");
-            song1.setDuration(100);
-            song1.setAudioFileExtension(".mpeg");
-            song1.setCreatedAt(new Date());
-
-            Song song2 = new Song();
-            song2.setTitle("Blinding Lights");
-            song2.setArtist("The Weeknd");
-            song2.setGenre("Synthpop");
-            song2.setDuration(130);
-            song2.setAlbum("After Hours");
-            song2.setAudioFileExtension(".mpeg");
-            song2.setCreatedAt(new Date());
-
-            Song song3 = new Song();
-            song3.setTitle("Bohemian Rhapsody");
-            song3.setArtist("Queen");
-            song3.setGenre("Rock");
-            song3.setDuration(120);
-            song3.setAlbum("A Night at the Opera");
-            song3.setAudioFileExtension(".mpeg");
-            song3.setCreatedAt(new Date());
-            Stream.of(song3,song2,song3).forEach(repo::save);
-
-
-
+            for (Song song : repo.findAll()) {
+                song.setCoverImageFileExtension(".jpeg");
+                repo.save(song);
+            }
         };
   }
 

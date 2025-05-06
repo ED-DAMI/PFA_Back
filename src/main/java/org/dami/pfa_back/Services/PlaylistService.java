@@ -13,22 +13,15 @@ import java.util.List;
 
 @Service
 public class PlaylistService {
-
-
     private final PlaylistRepo playlistRepository;
-
-
     private final SongRepo songRepository;
-
     public PlaylistService(PlaylistRepo playlistRepository, SongRepo songRepository) {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
     }
-
     public Iterable<Playlist> findAll() {
         return playlistRepository.findAll();
     }
-
     public Playlist findById(String id) {
         return playlistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Playlist not found"));
@@ -41,7 +34,6 @@ public class PlaylistService {
         playlist.setSongs(new ArrayList<>());
         return playlistRepository.save(playlist);
     }
-
     public void addSongToPlaylist(String playlistId, String songId) {
         Playlist playlist = findById(playlistId);
         Song song = songRepository.findById(songId)

@@ -1,8 +1,5 @@
 package org.dami.pfa_back.Documents;
 
-// import lombok.AllArgsConstructor; // Si vous décidez d'utiliser Lombok plus tard
-// import lombok.Data;
-// import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field; // Peut être utile pour typer les champs Date
@@ -14,40 +11,36 @@ import java.util.List;
 import java.util.Objects; // Pour equals/hashCode si besoin
 
 @Document(indexName = "songs")
-// @Data // Remplacerait Getters, Setters, toString, EqualsAndHashCode, RequiredArgsConstructor
-// @NoArgsConstructor
-// @AllArgsConstructor
+
 public class Song {
-
     @Id
-    private String id; // L'ID doit être défini avant la sauvegarde (ex: UUID)
-
+    private String id;
     private String title;
-    private String artist; // Suppose que c'est un ID ou un nom simple
+    private String artist;
     private String album;
-    private String genre; // Suppose que c'est un ID ou un nom simple
-    private int duration; // En secondes ?
+    private String genre;
+    private int duration;
+    private long number_vue;
 
-    // Pour Elasticsearch, typer explicitement les dates peut être bien
+    public long getNumber_vue() {
+        return number_vue;
+    }
+
+    public Song setNumber_vue(long number_vue) {
+        this.number_vue = number_vue;
+        return this;
+    }
+
     @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private Date releaseDate;
-
     private String language;
     private List<String> tags;
     private String lyrics; // Peut être long, Elasticsearch gère bien les textes
 
     @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private Date createdAt;
-
-    // --- NOUVEAUX CHAMPS REQUIS POUR L'ARCHITECTURE ---
-    private String audioFileExtension; // Ex: ".mp3", ".m4a" (Inclure le point)
-    private String coverImageFileExtension; // Ex: ".jpg", ".png" (Peut être null si pas d'image)
-    // --- FIN DES NOUVEAUX CHAMPS ---
-
-
-    // --- Constructeurs ---
-
-    // Constructeur sans arguments (requis par certains frameworks/librairies)
+    private String audioFileExtension;
+    private String coverImageFileExtension;
     public Song() {
     }
 
@@ -69,9 +62,6 @@ public class Song {
         this.audioFileExtension = audioFileExtension;
         this.coverImageFileExtension = coverImageFileExtension;
     }
-
-
-    // --- Getters et Setters (Style Fluent) ---
 
     public String getId() {
         return id;
