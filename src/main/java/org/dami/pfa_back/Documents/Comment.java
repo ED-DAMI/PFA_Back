@@ -10,42 +10,35 @@ import java.util.Date;
 public class Comment {
     @Id
     private String id;
-    private String userId;
+    private String author;
     private String songId;
     private String text;
-    private int rating;
     private Date createdAt;
-
-    public Comment(String id, String userId, String songId, String text, int rating, Date createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.songId = songId;
-        this.text = text;
-        this.rating = rating;
-        this.createdAt = createdAt;
+    public Comment() {
     }
-
     public String getId() {
         return id;
     }
-
     public Comment setId(String id) {
         this.id = id;
         return this;
     }
-
-    public String getUserId() {
-        return userId;
+    public Comment(String id, String author, String songId, String text, Date createdAt) {
+        this.id = id;
+        this.author = author;
+        this.songId = songId;
+        this.text = text;
+        this.createdAt = createdAt;
     }
-
-    public Comment setUserId(String userId) {
-        this.userId = userId;
+    public String getAuthor() {
+        return author;
+    }
+    public Comment setAuthor(String author) {
+        this.author = author;
         return this;
     }
 
-    public String getSongId() {
-        return songId;
-    }
+    public String getSongId() {return songId;}
 
     public Comment setSongId(String songId) {
         this.songId = songId;
@@ -60,20 +53,9 @@ public class Comment {
         this.text = text;
         return this;
     }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public Comment setRating(int rating) {
-        this.rating = rating;
-        return this;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
-
     public Comment setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;

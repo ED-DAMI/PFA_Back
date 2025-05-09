@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY ="Mohamed_EDAMI_FSTM_PFA_MUSIC"+ UUID.randomUUID().toString(); // À stocker de manière sécurisée en production
+    private final String SECRET_KEY ="Mohamed_EDAMI_FSTM_PFA_MUSIC_283883838388338JDHJXNXJDHDNSKKFJFNLLDOSLEOK234OKSMPFFadfdDPEROLFDE.DODMSPKFFLDDKDSDLIFUFNFN0FVGDGYTSVSI128097NDHUD890EEHHHJS2838"; // À stocker de manière sécurisée en production
     private final long EXPIRATION_TIME = 864000000; // 10 jours en millisecondes
 
     private SecretKey getSigningKey() {
@@ -33,7 +33,8 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject()
+                ;
     }
 
     public boolean validateToken(String token) {

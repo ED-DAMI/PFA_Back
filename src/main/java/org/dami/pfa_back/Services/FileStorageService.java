@@ -159,4 +159,7 @@ public class FileStorageService {
         }
         return null;
     }
+
+    public void deleteFileQuietly(String coverTargetFilename, boolean b) {
+    }
 }

@@ -1,11 +1,13 @@
 package org.dami.pfa_back.Documents;
 
+import org.dami.pfa_back.Documents.Enums.Emoji;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field; // Peut être utile pour typer les champs Date
 import org.springframework.data.elasticsearch.annotations.FieldType; // Peut être utile pour typer les champs Date
 
 
+import java.util.ArrayList;
 import java.util.Date; // Gardons java.util.Date comme dans votre code original
 import java.util.List;
 import java.util.Objects; // Pour equals/hashCode si besoin
@@ -19,17 +21,55 @@ public class Song {
     private String artist;
     private String album;
     private String genre;
+    private String tag;
     private int duration;
-    private long number_vue;
 
-    public long getNumber_vue() {
-        return number_vue;
+    public int getCommentCount() {
+
+        return commentCount;
     }
 
-    public Song setNumber_vue(long number_vue) {
-        this.number_vue = number_vue;
+    public Song setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
         return this;
     }
+
+    private int commentCount;
+    private long totalReactionCount;
+
+    public long getTotalReactionCount() {
+        return totalReactionCount;
+    }
+
+    public Song setTotalReactionCount(long totalReactionCount) {
+        this.totalReactionCount = totalReactionCount;
+        return this;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public Song setTag(String tag) {
+        this.tag = tag;
+        return this;
+    }
+
+
+
+
+    public long getViewCount() {
+        return ViewCount;
+    }
+
+    public Song setViewCount(long viewCount) {
+        ViewCount = viewCount;
+        return this;
+    }
+
+    private long ViewCount;;
+
+
 
     @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
     private Date releaseDate;
@@ -42,10 +82,11 @@ public class Song {
     private String audioFileExtension;
     private String coverImageFileExtension;
     public Song() {
+
     }
 
     // Constructeur avec tous les arguments (y compris les nouveaux)
-    public Song(String id, String title, String artist, String album, String genre, int duration,
+    public Song(String id, String title, String artist, String album, String genre, String tag, int duration,
                 Date releaseDate, String language, List<String> tags, String lyrics, Date createdAt,
                 String audioFileExtension, String coverImageFileExtension) { // Ajout des nouveaux params
         this.id = id;
@@ -53,6 +94,7 @@ public class Song {
         this.artist = artist;
         this.album = album;
         this.genre = genre;
+        this.tag = tag;
         this.duration = duration;
         this.releaseDate = releaseDate;
         this.language = language;
@@ -213,5 +255,9 @@ public class Song {
     @Override
     public int hashCode() {
         return Objects.hash(id); // Hasher uniquement sur l'ID
+    }
+
+    public void IncrementView() {
+        this.ViewCount++;
     }
 }

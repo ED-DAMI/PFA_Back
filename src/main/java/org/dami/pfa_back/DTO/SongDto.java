@@ -7,9 +7,7 @@ import java.util.Date; // Ou LocalDateTime/LocalDate si vous préférez
 import java.util.List;
 import java.util.Objects; // Pour equals/hashCode
 
-// @Data // Annotation Lombok pour générer getters, setters, toString, equals, hashCode
 public class SongDto {
-
     private String id;
     private String title;
     private String artist; // Supposons que c'est le nom ou l'ID de l'artiste
@@ -20,6 +18,37 @@ public class SongDto {
     private String language;
     private List<String> tags;
     private Date createdAt;
+    private long commentCount;
+    private long totalReactionCount;
+
+    public long getCommentCount() {
+        return commentCount;
+    }
+
+    public SongDto setCommentCount(long commentCount) {
+        this.commentCount = commentCount;
+        return this;
+    }
+
+    public long getTotalReactionCount() {
+        return totalReactionCount;
+    }
+
+    public SongDto setTotalReactionCount(long totalReactionCount) {
+        this.totalReactionCount = totalReactionCount;
+        return this;
+    }
+
+    public long getViewCount() {
+        return ViewCount;
+    }
+
+    public SongDto setViewCount(long viewCount) {
+        ViewCount = viewCount;
+        return this;
+    }
+
+    private  long ViewCount;
 
 
 
@@ -28,7 +57,7 @@ public class SongDto {
 
     }
 
-    public SongDto(String id, String title, String artist, String genre, String album,
+    public SongDto(String id, String title,long commentCount, String artist, String genre, String album,
                        int duration, Date releaseDate, String language, List<String> tags, Date createdAt) {
         this.id = id;
         this.title = title;
@@ -39,6 +68,7 @@ public class SongDto {
         this.releaseDate = releaseDate;
         this.language = language;
         this.tags = tags;
+        this.commentCount=commentCount;
         this.createdAt = createdAt;
     }
 
@@ -48,6 +78,7 @@ public class SongDto {
     public String getArtist() { return artist; }
     public String getGenre() { return genre; }
     public String getAlbum() { return album; }
+
     public int getDuration() { return duration; }
     public Date getReleaseDate() { return releaseDate; }
     public String getLanguage() { return language; }
