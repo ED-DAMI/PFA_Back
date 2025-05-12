@@ -127,4 +127,5 @@ public class SongDto {
     public int hashCode() {
         return Objects.hash(id); // Hash basé sur l'ID
     }
+
 }
