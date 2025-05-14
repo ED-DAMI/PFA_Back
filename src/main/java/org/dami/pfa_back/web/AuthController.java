@@ -31,7 +31,7 @@ public class AuthController {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (user.getPassword().equals(request.password)) {
-                String token = jwtUtil.generateToken(user.getEmail());
+                String token = jwtUtil.generateToken(user.getEmail(),user.getId());
 
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Login successful");

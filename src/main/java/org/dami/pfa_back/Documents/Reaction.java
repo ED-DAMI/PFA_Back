@@ -12,21 +12,27 @@ public class Reaction {
     private String id;
     private String songId;
     private Emoji  emojis;
-    private String reactorName;
+    private String reactorId;
     private Date   date;
 
-
-
-    public String getSongId() {
-        return songId;
+    @Override
+    public String toString() {
+        return "Reaction{" +
+                "id='" + id + '\'' +
+                ", songId='" + songId + '\'' +
+                ", emojis=" + emojis +
+                ", reactorId='" + reactorId + '\'' +
+                ", date=" + date +
+                '}';
     }
 
-    public Reaction setSongId(String songId) {
+    public Reaction(String id, String songId, Emoji emojis, String reactorId, Date date) {
+        this.id = id;
         this.songId = songId;
-        return this;
+        this.emojis = emojis;
+        this.reactorId = reactorId;
+        this.date = date;
     }
-
-
 
     public String getId() {
         return id;
@@ -34,6 +40,15 @@ public class Reaction {
 
     public Reaction setId(String id) {
         this.id = id;
+        return this;
+    }
+
+    public String getSongId() {
+        return songId;
+    }
+
+    public Reaction setSongId(String songId) {
+        this.songId = songId;
         return this;
     }
 
@@ -46,12 +61,12 @@ public class Reaction {
         return this;
     }
 
-    public String getReactorName() {
-        return reactorName;
+    public String getReactorId() {
+        return reactorId;
     }
 
-    public Reaction setReactorName(String reactorName) {
-        this.reactorName = reactorName;
+    public Reaction setReactorId(String reactorId) {
+        this.reactorId = reactorId;
         return this;
     }
 
@@ -62,15 +77,5 @@ public class Reaction {
     public Reaction setDate(Date date) {
         this.date = date;
         return this;
-    }
-
-    public Reaction(String id, Emoji emojis,String songId, String reactorName, Date date) {
-        this.id = id;
-        this.emojis = emojis;
-        this.songId=songId;
-        this.reactorName = reactorName;
-        this.date = date;
-    }
-    public Reaction() {
     }
 }

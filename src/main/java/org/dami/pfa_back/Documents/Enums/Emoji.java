@@ -3,6 +3,7 @@ package org.dami.pfa_back.Documents.Enums;
 // No DTO import is needed here.
 
 public enum Emoji {
+
     HEART("❤️"),
     LOVE("😍"),
     FIRE("🔥"),
@@ -34,9 +35,7 @@ public enum Emoji {
                 return e;
             }
         }
-        // Depending on your error handling preference, you might throw an exception here
-        // if an unknown symbol is a critical error.
-        // For example: throw new IllegalArgumentException("No Emoji constant with symbol: " + symbolString);
+
         return null; // Or return a default, or throw an exception.
     }
 }

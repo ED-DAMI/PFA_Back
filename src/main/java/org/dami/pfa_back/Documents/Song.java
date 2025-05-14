@@ -23,6 +23,19 @@ public class Song {
     private String genre;
     private String tag;
     private int duration;
+    private List<String> songHistory;
+
+
+    public List<String> getSongHistory() {
+        return songHistory;
+    }
+
+    public Song setSongHistory(List<String> songHistory) {
+        this.songHistory = songHistory;
+        return this;
+    }
+
+
 
     public int getCommentCount() {
 
@@ -86,7 +99,7 @@ public class Song {
     }
 
     // Constructeur avec tous les arguments (y compris les nouveaux)
-    public Song(String id, String title, String artist, String album, String genre, String tag, int duration,
+    public Song(String id, String title, String artist, String album, String genre, String tag, int duration, List<String> songHistory,
                 Date releaseDate, String language, List<String> tags, String lyrics, Date createdAt,
                 String audioFileExtension, String coverImageFileExtension) { // Ajout des nouveaux params
         this.id = id;
@@ -96,6 +109,7 @@ public class Song {
         this.genre = genre;
         this.tag = tag;
         this.duration = duration;
+        this.songHistory = songHistory;
         this.releaseDate = releaseDate;
         this.language = language;
         this.tags = tags;

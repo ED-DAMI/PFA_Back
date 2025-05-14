@@ -9,5 +9,4 @@ import java.util.List;
 public interface CommentReop extends ElasticsearchRepository<Comment,String> {
     Collection<Comment> findByAuthor(String Author);
     List<Comment> findBySongId(String songId);
-
 }

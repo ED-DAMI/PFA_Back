@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ReactionRepo extends ElasticsearchRepository<Reaction,String> {
     List<Reaction> findBySongId(String songid);
+    void deleteByReactorIdAndSongId(String reactorId, String songId);
+    Optional<Reaction> getByReactorIdAndSongId(String reactorId, String songId);
 }

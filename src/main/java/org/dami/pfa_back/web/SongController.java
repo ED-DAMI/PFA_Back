@@ -115,7 +115,6 @@ public class SongController {
             // Exemple: Map<String, Object> audioData = songService.getAudioStreamData(id, token);
             // Resource resource = (Resource) audioData.get("resource");
             // String filenameWithExtension = (String) audioData.get("filename");
-            songService.IncrementerView(id);
             String filenameWithExtension = songService.getAudioFilenameById(id); // Peut lancer ResourceNotFoundException
             Resource resource = songService.getAudioResourceById(id, token);    // Peut lancer IOException ou ResourceNotFoundException
 

@@ -15,7 +15,6 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
     private ResponseEntity<Object> buildErrorResponse(Exception ex, HttpStatus status, WebRequest request, String customMessage) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", System.currentTimeMillis());

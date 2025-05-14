@@ -2,10 +2,12 @@ package org.dami.pfa_back.Services;
 
 import org.dami.pfa_back.DTO.SongDto;
 import org.dami.pfa_back.Documents.Song;
+import org.dami.pfa_back.Documents.history;
 import org.dami.pfa_back.Exception.StorageException;
 import org.dami.pfa_back.Repository.SongRepo;
 // import org.dami.pfa_back.Repository.TagRepository; // Décommentez si SongService gère directement le filtrage par tag
  // Assurez-vous que cette exception existe
+import org.dami.pfa_back.Security.JwtUtil;
 import org.elasticsearch.client.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,20 +30,24 @@ public class SongService {
 
     private static final Logger log = LoggerFactory.getLogger(SongService.class);
     private final SongRepo songRepository;
+    private final historyService historyService;
     private final FileStorageService fileStorageService;
+    private final JwtUtil jwtUtil;
     // private final TagRepository tagRepository; // Injectez si vous filtrez par tag ici
     // private final UserService userService; // Pour une gestion d'autorisation plus poussée
 
-    public SongService(SongRepo songRepository,
-                       FileStorageService fileStorageService
-            /*, TagRepository tagRepository, UserService userService */) {
+    public SongService(SongRepo songRepository, historyService historyService,
+                       FileStorageService fileStorageService,
+            /*, TagRepository tagRepository, UserService userService */JwtUtil jwtUtil) {
         this.songRepository = songRepository;
+        this.historyService = historyService;
         this.fileStorageService = fileStorageService;
         // this.tagRepository = tagRepository;
         // this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
-    private SongDto mapToSongDto(Song song) {
+    public SongDto mapToSongDto(Song song) {
         if (song == null) return null;
         SongDto dto = new SongDto();
         dto.setId(song.getId());
@@ -51,6 +57,7 @@ public class SongService {
         dto.setViewCount(song.getViewCount());
         dto.setTotalReactionCount(song.getTotalReactionCount());
         dto.setCommentCount(song.getCommentCount());
+        dto.setCreatedAt(song.getCreatedAt());
         // Optionnel: Construire des URLs complètes si le DTO doit les exposer
         // dto.setAudioUrl("/api/songs/" + song.getId() + "/audio");
         // dto.setCoverUrl("/api/songs/" + song.getId() + "/cover");
@@ -103,9 +110,12 @@ public class SongService {
 
     @Transactional
     public void incrementViewCount(String songId, String token) {
+        String userId = jwtUtil.extractUserId(token);
+
         log.debug("Service: incrementViewCount - SongID: '{}'. Token presence: {}", songId, (token != null));
         Song song = findById(songId); // findById lance ResourceNotFoundException si non trouvé
         long currentViews = song.getViewCount();
+        historyService.save(new history(null,userId,songId));
         song.setViewCount(currentViews + 1);
         songRepository.save(song);
         log.info("Service: View count for song '{}' incremented to {}", songId, song.getViewCount());

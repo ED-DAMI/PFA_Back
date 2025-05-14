@@ -47,10 +47,7 @@ public class CommentController {
 
     private String getUsername(String auth) {
         String token = auth.substring(7);
-        String email = jwtUtil.extractEmail(token);
-        String username= userRepo.findByEmail(email).get().getUsername();
-        System.out.println(username);
-        return username;
+        return jwtUtil.extractUserId(token);
     }
 }
 
