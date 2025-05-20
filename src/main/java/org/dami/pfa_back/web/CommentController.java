@@ -40,7 +40,7 @@ public class CommentController {
     @PostMapping("/{songId}")
     public Comment addComment(@RequestHeader("Authorization") String auth,@PathVariable String songId ,@RequestBody CommentDto commentDto) {
         String username = getUsername(auth);
-        Comment comment = new Comment(null, username, songId, commentDto.getText(), new Date());
+        Comment comment = new Comment(null, username, songId, commentDto.getText(), new Date(),false);
         songService.IncrementCommentaire(songId);
         return commentService.saveComment(comment);
     }

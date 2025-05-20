@@ -24,6 +24,7 @@ public class PlaylistService {
     }
 
     public Playlist addSongToPlaylist(String playlistId, String songId) {
+        System.out.println("songId = " + songId);
         Optional<Playlist> optionalPlaylist = playlistRepo.findById(playlistId);
         if (optionalPlaylist.isPresent()) {
             Playlist playlist = optionalPlaylist.get();

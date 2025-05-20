@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Bean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @SpringBootApplication
 public class PfaBackApplication {
@@ -27,78 +29,68 @@ public class PfaBackApplication {
     public static void main(String[] args) {
         SpringApplication.run(PfaBackApplication.class, args);
     }
-     @Bean
-    CommandLineRunner start(SongRepo repo,ReactionRepo reactionRepo){
-        return args ->{
-            repo.deleteAll();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            Song song1 = new Song()
-                    .setId("wc7XoZYB0O3F18ReDNho")
-                    .setTitle("Blinding Lights")
-                    .setArtist("The Weeknd")
-                    .setAlbum("After Hours")
-                    .setGenre("Synthpop")
-                    .setDuration(130)
-                    .setCommentCount(2)
-                    .setTotalReactionCount(26)
-                    .setViewCount(20)
-                    .setCreatedAt(sdf.parse("2025-05-05T19:05:46.686Z"))
-                    .setAudioFileExtension(".mpeg")
-                    .setCoverImageFileExtension(".jpeg");
 
-            Song song2 = new Song()
-                    .setId("song-001")
-                    .setTitle("Ocean Breeze")
-                    .setArtist("Artist A")
-                    .setAlbum("Summer Vibes")
-                    .setGenre("Chillwave")
-                    .setDuration(210)
-                    .setCommentCount(5)
-                    .setTotalReactionCount(33)
-                    .setViewCount(23)
-                    .setReleaseDate(sdf.parse("2025-01-14T23:00:00.000Z"))
-                    .setLanguage("English")
-                    .setTags(Arrays.asList("relaxing", "summer", "electronic"))
-                    .setLyrics("[Instrumental]")
-                    .setCreatedAt(sdf.parse("2025-05-06T08:48:39.675Z"))
-                    .setAudioFileExtension(".mp3")
-                    .setCoverImageFileExtension(".jpeg");
 
-            Song song3 = new Song()
-                    .setId("song-002")
-                    .setTitle("Mountain Echoes")
-                    .setArtist("Artist B")
-                    .setAlbum("Nature Sounds")
-                    .setGenre("Ambient")
-                    .setDuration(180)
-                    .setCommentCount(2)
-                    .setTotalReactionCount(29)
-                    .setViewCount(29)
-                    .setReleaseDate(sdf.parse("2025-02-09T23:00:00.000Z"))
-                    .setLanguage("Instrumental")
-                    .setTags(Arrays.asList("nature", "ambient", "meditation"))
-                    .setLyrics("")
-                    .setCreatedAt(sdf.parse("2025-05-06T08:48:39.675Z"))
-                    .setAudioFileExtension(".mpeg")
-                    .setCoverImageFileExtension(".jpeg");
+    CommandLineRunner start(SongRepo repo, ReactionRepo reactionRepo, CommentReop commentReop) {
+        return args -> {
+            List<Song> songs = new ArrayList<>();
+            Random random = new Random();
 
-            Song song4 = new Song()
-                    .setId("wM7XoZYB0O3F18ReCdjW")
-                    .setTitle("Bohemian Rhapsody")
-                    .setArtist("Queen")
-                    .setAlbum("A Night at the Opera")
-                    .setGenre("Rock")
-                    .setDuration(120)
-                    .setCommentCount(3)
-                    .setTotalReactionCount(24)
-                    .setViewCount(135)
-                    .setCreatedAt(sdf.parse("2025-05-05T19:05:46.686Z"))
-                    .setAudioFileExtension(".mpeg")
-                    .setCoverImageFileExtension(".jpeg");
+            String[] titles = {
+                    "Espresso", "Texas Hold 'Em", "Birds of a Feather", "Too Sweet",
+                    "Die With a Smile", "Good Luck, Babe!", "Not Like Us", "So American",
+                    "Piece of My Heart", "Taste", "Padam Padam", "Water"
+            };
 
-            Stream
-                    .of(song1,song4,song3,song2)
-                    .forEach(songRepo::save);
+            String[] artists = {
+                    "Sabrina Carpenter", "Beyoncé", "Billie Eilish", "Hozier",
+                    "Bruno Mars & Lady Gaga", "Chappell Roan", "Kendrick Lamar", "Olivia Rodrigo",
+                    "Wizkid ft. Brent Faiyaz", "Sabrina Carpenter", "Kylie Minogue", "Tyla"
+            };
+
+            String[] albums = {
+                    "Short n' Sweet", "Cowboy Carter", "Hit Me Hard and Soft", "Unreal Unearth",
+                    "Single", "The Rise and Fall of a Midwest Princess", "Not Like Us - Single", "Guts (Spilled)",
+                    "Morayo", "Short n' Sweet", "Tension", "Tyla"
+            };
+
+            String[] genres = {"Pop", "R&B", "Soul", "Afropop", "Synthpop", "Country"};
+            String[] languages = {"English"};
+            String[] tagPool = {"hit", "2024", "trending", "viral", "award-winning"};
+
+            for (int i = 13; i <= 24; i++) {
+                String id = "music_" + i;
+                String title = titles[i - 13];
+                String artist = artists[i - 13];
+                String album = albums[i - 13];
+                String genre = genres[random.nextInt(genres.length)];
+                String tag = tagPool[random.nextInt(tagPool.length)];
+                int duration = 180 + random.nextInt(60); // Durée entre 180 et 240 secondes
+
+                Date releaseDate = new Date(System.currentTimeMillis() - random.nextInt(1_000_000_000));
+                String language = languages[0];
+                List<String> tags = Arrays.asList(tag, "popular", "2024");
+                String lyrics = "Lyrics not available.";
+                Date createdAt = new Date();
+                String audioExt = ".mpeg";
+                String coverExt = ".jpeg";
+
+                Song song = new Song(
+                        id, title, artist, album, genre, tag, duration,
+                        releaseDate, language, tags, lyrics, createdAt, audioExt, coverExt
+                );
+
+                song.setViewCount(random.nextInt(10000)); // Nombre de vues aléatoire
+
+                songs.add(song);
+            }
+
+
+            songRepo.saveAll(songs);
+
         };
-  }
+
+    }
 }
+
+

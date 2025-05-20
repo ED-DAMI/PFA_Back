@@ -7,8 +7,9 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args) {
-        List<String> t = Arrays.asList("❤️", "😍", "🔥", "👍", "😢", "😮");
-         System.out.println(t.get(1));
+        List<String> t = Arrays
+                .asList("❤️", "😍", "🔥", "👍", "😢", "😮");
+
 
     }
 }

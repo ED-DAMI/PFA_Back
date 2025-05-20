@@ -3,7 +3,9 @@ package org.dami.pfa_back.web;
 import org.dami.pfa_back.DTO.SongDto;
 import org.dami.pfa_back.Documents.Song; // Pour GET by ID et retour d'upload
 // Votre exception personnalisée
+import org.dami.pfa_back.Security.JwtUtil;
 import org.dami.pfa_back.Services.FileStorageService;
+import org.dami.pfa_back.Services.RecommendationService;
 import org.dami.pfa_back.Services.SongService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +32,14 @@ public class SongController {
     private static final Logger log = LoggerFactory.getLogger(SongController.class);
     private final SongService songService;
     private final FileStorageService fileStorageService;
+    private final JwtUtil jwtUtil;
+    private final RecommendationService recommendationService;
 
-    public SongController(SongService songService, FileStorageService fileStorageService) {
+    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, RecommendationService recommendationService) {
         this.songService = songService;
         this.fileStorageService = fileStorageService;
+        this.jwtUtil = jwtUtil;
+        this.recommendationService = recommendationService;
     }
 
     // Helper pour extraire le token Bearer
@@ -70,6 +76,10 @@ public class SongController {
     public ResponseEntity<List<SongDto>> getRecommendations(
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = extractToken(authorizationHeader);
+        String userId = jwtUtil.extractUserId(token);
+
+
+
         log.info("Fetching recommendations. Token present: {}", (token != null));
         List<SongDto> recommendations = songService.getRecommendations(token);
         return ResponseEntity.ok(recommendations);
@@ -79,6 +89,8 @@ public class SongController {
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = extractToken(authorizationHeader);
         log.info("Fetching recommendations. Token present: {}", (token != null));
+       // String userId = jwtUtil.extractUserId(token);
+        //System.out.println(recommendationService.getHybridRecommendations(userId, 10));
         List<SongDto> recommendations = songService.getRecommendations(token);
         return ResponseEntity.ok(recommendations);
     }
@@ -209,7 +221,9 @@ public class SongController {
             @RequestParam("genre") String genre,   // Correspond au nom envoyé par Dart
             @RequestParam("audio") MultipartFile audioFile,
             @RequestParam("cover") MultipartFile coverImageFile,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) { // Upload peut être protégé
+            @RequestHeader(value = "Authorization",
+                    required = false)
+            String authorizationHeader) { // Upload peut être protégé
 
         String token = extractToken(authorizationHeader);
         // Idéalement, le token serait utilisé pour identifier l'uploader
@@ -237,7 +251,8 @@ public class SongController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSong(
             @PathVariable String id,
-            @RequestHeader(value = "Authorization") String authorizationHeader) { // Token est requis par l'API Dart
+            @RequestHeader(value = "Authorization")
+            String authorizationHeader) { // Token est requis par l'API Dart
         String token = extractToken(authorizationHeader);
         if (token == null) {
             log.warn("Attempt to delete song {} without valid token format", id);
@@ -267,7 +282,8 @@ public class SongController {
     @PostMapping("/{id}/view")
     public ResponseEntity<Void> incrementView(
             @PathVariable String id,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+            @RequestHeader(value = "Authorization"
+                    , required = false) String authorizationHeader) {
         String token = extractToken(authorizationHeader); // Le token peut être optionnel pour cette action
         log.info("Incrementing view for song ID: {}. Token present: {}", id, (token != null));
         try {

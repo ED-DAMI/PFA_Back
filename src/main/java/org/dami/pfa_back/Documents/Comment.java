@@ -12,8 +12,11 @@ public class Comment {
     private String id;
     private String author;
     private String songId;
+    private boolean isPositive;
     private String text;
     private Date createdAt;
+
+
     public Comment() {
     }
     public String getId() {
@@ -23,12 +26,24 @@ public class Comment {
         this.id = id;
         return this;
     }
-    public Comment(String id, String author, String songId, String text, Date createdAt) {
+
+    public boolean isPositive() {
+        return isPositive;
+    }
+
+
+    public Comment setPositive(boolean positive) {
+        isPositive = positive;
+        return this;
+    }
+
+    public Comment(String id, String author, String songId, String text, Date createdAt,boolean isPositive) {
         this.id = id;
         this.author = author;
         this.songId = songId;
         this.text = text;
         this.createdAt = createdAt;
+        this.isPositive=isPositive;
     }
     public String getAuthor() {
         return author;

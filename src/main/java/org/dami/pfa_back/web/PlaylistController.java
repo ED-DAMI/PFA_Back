@@ -26,6 +26,7 @@ public class PlaylistController {
     public ResponseEntity<List<Playlist>> getAll(
             @RequestHeader("Authorization") String auth){
             String token = auth.substring(7);
+        System.out.println("token = " + token);
         if (!jwtUtil.validateToken(token))
               throw new RuntimeException("Invalide Token");
 
@@ -54,6 +55,7 @@ public class PlaylistController {
     }
     @PostMapping("/{playlistId}/songs")
     public ResponseEntity<Playlist> addSongToPlaylist(@PathVariable String playlistId, @RequestBody String songId ){
+        songId=songId.substring(11,songId.length()-2);
         Playlist playlist = playlistService.addSongToPlaylist(playlistId, songId);
         return ResponseEntity
                 .ok(playlist);
