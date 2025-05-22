@@ -33,4 +33,11 @@ public class PlaylistService {
         }
         return null;
     }
+
+    public void delete(String playlistId, String songId) {
+        Playlist playlist = playlistRepo.findById(playlistId).get();
+        playlist.getSongIds().remove(songId);
+        playlistRepo.save(playlist);
+
+    }
 }

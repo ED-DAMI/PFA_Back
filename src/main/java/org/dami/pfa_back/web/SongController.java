@@ -3,10 +3,12 @@ package org.dami.pfa_back.web;
 import org.dami.pfa_back.DTO.SongDto;
 import org.dami.pfa_back.Documents.Song; // Pour GET by ID et retour d'upload
 // Votre exception personnalisée
+import org.dami.pfa_back.Documents.history;
 import org.dami.pfa_back.Security.JwtUtil;
 import org.dami.pfa_back.Services.FileStorageService;
 import org.dami.pfa_back.Services.RecommendationService;
 import org.dami.pfa_back.Services.SongService;
+import org.dami.pfa_back.Services.historyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -34,12 +36,14 @@ public class SongController {
     private final FileStorageService fileStorageService;
     private final JwtUtil jwtUtil;
     private final RecommendationService recommendationService;
+    private final historyService historyService;
 
-    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, RecommendationService recommendationService) {
+    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, RecommendationService recommendationService, historyService historyService) {
         this.songService = songService;
         this.fileStorageService = fileStorageService;
         this.jwtUtil = jwtUtil;
         this.recommendationService = recommendationService;
+        this.historyService = historyService;
     }
 
     // Helper pour extraire le token Bearer
@@ -84,6 +88,7 @@ public class SongController {
         List<SongDto> recommendations = songService.getRecommendations(token);
         return ResponseEntity.ok(recommendations);
     }
+
     @GetMapping("/{songId}/recommendations")
     public ResponseEntity<List<SongDto>> getRecommendationsBySong(
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
@@ -284,10 +289,13 @@ public class SongController {
             @PathVariable String id,
             @RequestHeader(value = "Authorization"
                     , required = false) String authorizationHeader) {
-        String token = extractToken(authorizationHeader); // Le token peut être optionnel pour cette action
+        String token = extractToken(authorizationHeader);
+
         log.info("Incrementing view for song ID: {}. Token present: {}", id, (token != null));
         try {
-            songService.incrementViewCount(id, token); // Le service gère la logique, potentiellement avec le token
+            songService.incrementViewCount(id, token);
+            historyService.save(new history(null, jwtUtil.extractUserId(token),id));
+            // Le service gère la logique, potentiellement avec le token
             return ResponseEntity.ok().build(); // Ou ResponseEntity.noContent().build()
         } catch (ResourceNotFoundException e) {
             log.warn("Song not found for view increment, ID: {}", id, e);

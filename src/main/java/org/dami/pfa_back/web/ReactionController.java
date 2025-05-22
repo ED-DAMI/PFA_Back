@@ -22,12 +22,11 @@ import java.util.stream.StreamSupport;
 public class ReactionController {
     private final ReactionService reactionService;
     private final SongService songService;
-    private final UserRepo userRepo;
+
     private final JwtUtil jwtUtil;
     public ReactionController(ReactionService reactionService, SongService songService, UserRepo userRepo, JwtUtil jwtUtil) {
         this.reactionService = reactionService;
         this.songService = songService;
-        this.userRepo = userRepo;
         this.jwtUtil = jwtUtil;
     }
     @GetMapping("/{songId}")

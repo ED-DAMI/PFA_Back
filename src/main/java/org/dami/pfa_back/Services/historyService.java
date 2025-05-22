@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service;
 public class historyService {
     private final historyRepo historyRepo;
 
-    public historyService(org.dami.pfa_back.Repository.historyRepo historyRepo) {
+    public historyService(historyRepo historyRepo) {
         this.historyRepo = historyRepo;
     }
 
     public void save(history history) {
-        historyRepo.save(history);
+        String songId = history.getSongId();
+        String userId = history.getUserId();
+        if (historyRepo.existsBySongIdAndUserId(songId,userId).isPresent())
+            return;
+        
+         historyRepo.save(history);
     }
 }

@@ -60,6 +60,15 @@ public class PlaylistController {
         return ResponseEntity
                 .ok(playlist);
     }
+    @DeleteMapping("/{playlistId}/songs/{songId}")
+    public ResponseEntity deleteSongFromPlaylist(@RequestHeader("Authorization") String auth,
+                                                      @PathVariable String playlistId,
+                                                      @PathVariable String songId)
+    {
+        playlistService.delete(playlistId,songId);
+        return ResponseEntity.ok().build();
+
+    }
 
 
 }
