@@ -20,6 +20,16 @@ public class SongDto {
     private Date createdAt;
     private long commentCount;
     private long totalReactionCount;
+    private Date listenedAt;
+
+    public Date getListenedAt() {
+        return listenedAt;
+    }
+
+    public SongDto setListenedAt(Date listenedAt) {
+        this.listenedAt = listenedAt;
+        return this;
+    }
 
     public long getCommentCount() {
         return commentCount;

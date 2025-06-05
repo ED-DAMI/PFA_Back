@@ -1,14 +1,14 @@
 package org.dami.pfa_back.web;
 
+import org.dami.pfa_back.DTO.ListenDurationDto;
 import org.dami.pfa_back.DTO.SongDto;
 import org.dami.pfa_back.Documents.Song; // Pour GET by ID et retour d'upload
 // Votre exception personnalisée
-import org.dami.pfa_back.Documents.history;
+import org.dami.pfa_back.Documents.History;
 import org.dami.pfa_back.Security.JwtUtil;
 import org.dami.pfa_back.Services.FileStorageService;
-import org.dami.pfa_back.Services.RecommendationService;
 import org.dami.pfa_back.Services.SongService;
-import org.dami.pfa_back.Services.historyService;
+import org.dami.pfa_back.Services.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -24,32 +24,32 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
-import java.util.Map; // Utilisé si SongService retourne un Map pour les flux
 
 @RestController
 @RequestMapping("/api/songs")
 public class SongController {
-
     private static final Logger log = LoggerFactory.getLogger(SongController.class);
-    private final SongService songService;
-    private final FileStorageService fileStorageService;
-    private final JwtUtil jwtUtil;
-    private final RecommendationService recommendationService;
-    private final historyService historyService;
+    private final  SongService songService;
+    private final  FileStorageService fileStorageService;
+    private final  JwtUtil jwtUtil;
 
-    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, RecommendationService recommendationService, historyService historyService) {
+    private final  HistoryService historyService;
+
+    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, HistoryService historyService) {
         this.songService = songService;
         this.fileStorageService = fileStorageService;
         this.jwtUtil = jwtUtil;
-        this.recommendationService = recommendationService;
+
         this.historyService = historyService;
     }
 
     // Helper pour extraire le token Bearer
     private String extractToken(String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.toLowerCase().startsWith("bearer ")) {
-            return authorizationHeader.substring(7);
+            return authorizationHeader
+                    .substring(7);
         }
         return null;
     }
@@ -80,9 +80,6 @@ public class SongController {
     public ResponseEntity<List<SongDto>> getRecommendations(
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = extractToken(authorizationHeader);
-        String userId = jwtUtil.extractUserId(token);
-
-
 
         log.info("Fetching recommendations. Token present: {}", (token != null));
         List<SongDto> recommendations = songService.getRecommendations(token);
@@ -263,7 +260,7 @@ public class SongController {
             log.warn("Attempt to delete song {} without valid token format", id);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authorization token is missing or invalid format");
         }
-        log.info("Deleting song ID: {}. Token present.", id);
+        log.info("Deleting song ID: {}. Token present.{}", id,token!=null);
 
         // Ici, vous feriez une vérification d'autorisation plus poussée
         // par exemple, songService.deleteSong(id, token); où le service valide le token et les droits.
@@ -294,8 +291,10 @@ public class SongController {
         log.info("Incrementing view for song ID: {}. Token present: {}", id, (token != null));
         try {
             songService.incrementViewCount(id, token);
-            historyService.save(new history(null, jwtUtil.extractUserId(token),id));
-            // Le service gère la logique, potentiellement avec le token
+            History history = new History(null, jwtUtil.extractUserId(token), id,0,new Date());
+
+            historyService.save(history);
+
             return ResponseEntity.ok().build(); // Ou ResponseEntity.noContent().build()
         } catch (ResourceNotFoundException e) {
             log.warn("Song not found for view increment, ID: {}", id, e);
@@ -304,5 +303,16 @@ public class SongController {
             log.error("Error incrementing view for song ID: {}", id, e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to increment view count", e);
         }
+    }
+    @PostMapping("/{songId}/track-listen")
+    public ResponseEntity<Void> trackListenDuration(
+            @RequestHeader("Authorization") String auth,
+            @PathVariable String songId,
+            @RequestBody ListenDurationDto listenDurationDto) {
+
+        String userId = jwtUtil.extractUserId(auth.substring(7));
+        historyService.UpdateListenDuration(songId,userId,listenDurationDto.getDurationListenedSeconds());
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -17,6 +17,11 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private String role; // LISTENER, ARTIST, ADMIN
+    private List<String> favorites;
+    private List<String> playlists;
+    private Date createdAt;
+    private String avatarFilename;
 
     public User() {
 
@@ -31,10 +36,7 @@ public class User {
         return this;
     }
 
-    private String role; // LISTENER, ARTIST, ADMIN
-    private List<String> favorites;
-    private List<String> playlists;
-    private Date createdAt;
+
 
     public String getId() {
         return id;
@@ -120,6 +122,15 @@ public class User {
                 ", playlists=" + playlists +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public String getAvatarFilename() {
+        return this.avatarFilename;
+    }
+
+    public void setAvatarFilename(String avatarFilename) {
+       this.avatarFilename=avatarFilename;
+
     }
 }
 

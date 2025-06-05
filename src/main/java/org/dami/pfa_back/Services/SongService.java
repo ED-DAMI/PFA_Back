@@ -1,14 +1,15 @@
 package org.dami.pfa_back.Services;
 
 import org.dami.pfa_back.DTO.SongDto;
+import org.dami.pfa_back.Documents.Enums.Interaction;
+
 import org.dami.pfa_back.Documents.Song;
-import org.dami.pfa_back.Documents.history;
+import org.dami.pfa_back.Documents.History;
 import org.dami.pfa_back.Exception.StorageException;
 import org.dami.pfa_back.Repository.SongRepo;
 // import org.dami.pfa_back.Repository.TagRepository; // Décommentez si SongService gère directement le filtrage par tag
  // Assurez-vous que cette exception existe
 import org.dami.pfa_back.Security.JwtUtil;
-import org.elasticsearch.client.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -18,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -30,22 +28,19 @@ public class SongService {
 
     private static final Logger log = LoggerFactory.getLogger(SongService.class);
     private final SongRepo songRepository;
-    private final historyService historyService;
+    private final HistoryService historyService;
     private final FileStorageService fileStorageService;
     private final JwtUtil jwtUtil;
-    // private final TagRepository tagRepository; // Injectez si vous filtrez par tag ici
-    // private final UserService userService; // Pour une gestion d'autorisation plus poussée
 
-    public SongService(SongRepo songRepository, historyService historyService,
-                       FileStorageService fileStorageService,
-            /*, TagRepository tagRepository, UserService userService */JwtUtil jwtUtil) {
+    public SongService(SongRepo songRepository, HistoryService historyService, FileStorageService fileStorageService, JwtUtil jwtUtil) {
         this.songRepository = songRepository;
         this.historyService = historyService;
         this.fileStorageService = fileStorageService;
-        // this.tagRepository = tagRepository;
-        // this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
+    // private final KafkaTopicUserAction kafkaTopicUserAction;
+
+
 
     public SongDto mapToSongDto(Song song) {
         if (song == null) return null;
@@ -58,6 +53,8 @@ public class SongService {
         dto.setTotalReactionCount(song.getTotalReactionCount());
         dto.setCommentCount(song.getCommentCount());
         dto.setCreatedAt(song.getCreatedAt());
+        dto.setTags(song.getTags());
+
         // Optionnel: Construire des URLs complètes si le DTO doit les exposer
         // dto.setAudioUrl("/api/songs/" + song.getId() + "/audio");
         // dto.setCoverUrl("/api/songs/" + song.getId() + "/cover");
@@ -111,11 +108,10 @@ public class SongService {
     @Transactional
     public void incrementViewCount(String songId, String token) {
         String userId = jwtUtil.extractUserId(token);
-
         log.debug("Service: incrementViewCount - SongID: '{}'. Token presence: {}", songId, (token != null));
         Song song = findById(songId); // findById lance ResourceNotFoundException si non trouvé
         long currentViews = song.getViewCount();
-        historyService.save(new history(null,userId,songId));
+        historyService.save(new History(null, userId, songId,0,new Date()));
         song.setViewCount(currentViews + 1);
         songRepository.save(song);
         log.info("Service: View count for song '{}' incremented to {}", songId, song.getViewCount());

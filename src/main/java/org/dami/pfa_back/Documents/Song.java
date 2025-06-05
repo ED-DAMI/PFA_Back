@@ -21,22 +21,27 @@ public class Song {
     private String artist;
     private String album;
     private String genre;
-    private String tag;
     private int duration;
-
+    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
+    private Date releaseDate;
+    private String language;
+    private List<String> tags;
+    private String lyrics;
+    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
+    private Date createdAt;
+    private String audioFileExtension;
+    private String coverImageFileExtension;
+    private int commentCount;
+    private long totalReactionCount;
+    private long ViewCount;
 
     public int getCommentCount() {
-
         return commentCount;
     }
-
     public Song setCommentCount(int commentCount) {
         this.commentCount = commentCount;
         return this;
     }
-
-    private int commentCount;
-    private long totalReactionCount;
 
     public long getTotalReactionCount() {
         return totalReactionCount;
@@ -44,15 +49,6 @@ public class Song {
 
     public Song setTotalReactionCount(long totalReactionCount) {
         this.totalReactionCount = totalReactionCount;
-        return this;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public Song setTag(String tag) {
-        this.tag = tag;
         return this;
     }
 
@@ -68,26 +64,15 @@ public class Song {
         return this;
     }
 
-    private long ViewCount;;
 
 
 
-    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
-    private Date releaseDate;
-    private String language;
-    private List<String> tags;
-    private String lyrics; // Peut être long, Elasticsearch gère bien les textes
-
-    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'||strict_date_optional_time||epoch_millis")
-    private Date createdAt;
-    private String audioFileExtension;
-    private String coverImageFileExtension;
     public Song() {
 
     }
 
     // Constructeur avec tous les arguments (y compris les nouveaux)
-    public Song(String id, String title, String artist, String album, String genre, String tag, int duration,
+    public Song(String id, String title, String artist, String album, String genre, int duration,
                 Date releaseDate, String language, List<String> tags, String lyrics, Date createdAt,
                 String audioFileExtension, String coverImageFileExtension) { // Ajout des nouveaux params
         this.id = id;
@@ -95,7 +80,7 @@ public class Song {
         this.artist = artist;
         this.album = album;
         this.genre = genre;
-        this.tag = tag;
+
         this.duration = duration;
 
         this.releaseDate = releaseDate;
@@ -224,7 +209,15 @@ public class Song {
     }
 
 
-    // --- toString() mis à jour ---
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return Objects.equals(id, song.id); // Comparer uniquement sur l'ID
+    }
+
     @Override
     public String toString() {
         return "Song{" +
@@ -237,21 +230,14 @@ public class Song {
                 ", releaseDate=" + releaseDate +
                 ", language='" + language + '\'' +
                 ", tags=" + tags +
-                ", lyrics='" + lyrics + '\'' + // Attention si très long
+                ", lyrics='" + lyrics + '\'' +
                 ", createdAt=" + createdAt +
-                ", audioFileExtension='" + audioFileExtension + '\'' + // Ajouté
-                ", coverImageFileExtension='" + coverImageFileExtension + '\'' + // Ajouté
+                ", audioFileExtension='" + audioFileExtension + '\'' +
+                ", coverImageFileExtension='" + coverImageFileExtension + '\'' +
+                ", commentCount=" + commentCount +
+                ", totalReactionCount=" + totalReactionCount +
+                ", ViewCount=" + ViewCount +
                 '}';
-    }
-
-    // --- Optionnel mais recommandé: equals() et hashCode() ---
-    // Basés sur l'ID si celui-ci est l'identifiant unique fiable
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Song song = (Song) o;
-        return Objects.equals(id, song.id); // Comparer uniquement sur l'ID
     }
 
     @Override

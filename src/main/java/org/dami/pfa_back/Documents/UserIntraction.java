@@ -2,13 +2,13 @@ package org.dami.pfa_back.Documents;
 
 import org.dami.pfa_back.Documents.Enums.Interaction;
 
-public class Event {
+public class UserIntraction {
     private String userId;
     private String songId;
     private Interaction interaction;
     private String Interaction_ID;
 
-    public Event(String userId, String songId,String interactiàonId,Interaction interaction ) {
+    public UserIntraction(String userId, String songId, String interactiàonId, Interaction interaction ) {
         this.userId = userId;
         this.songId = songId;
         this.interaction = interaction;
@@ -19,7 +19,7 @@ public class Event {
         return userId;
     }
 
-    public Event setUserId(String userId) {
+    public UserIntraction setUserId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -28,7 +28,7 @@ public class Event {
         return songId;
     }
 
-    public Event setSongId(String songId) {
+    public UserIntraction setSongId(String songId) {
         this.songId = songId;
         return this;
     }
@@ -37,7 +37,7 @@ public class Event {
         return interaction;
     }
 
-    public Event setInteraction(Interaction interaction) {
+    public UserIntraction setInteraction(Interaction interaction) {
         this.interaction = interaction;
         return this;
     }
@@ -46,14 +46,10 @@ public class Event {
         return Interaction_ID;
     }
 
-    public Event() {
-    }
-
-    public Event setInteraction_ID(String interaction_ID) {
+    public UserIntraction setInteraction_ID(String interaction_ID) {
         Interaction_ID = interaction_ID;
         return this;
     }
-
 
     @Override
     public String toString() {
