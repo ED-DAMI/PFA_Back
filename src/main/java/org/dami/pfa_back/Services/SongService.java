@@ -339,4 +339,14 @@ public class SongService {
         Song song = songRepository.findById(songId).get();
         song.setCommentCount(song.getCommentCount()+1);
     }
+
+    public List<SongDto> getSongDtosByIds(List<String> songIds) {
+        Iterable<Song> IterableSong = songRepository.findAllById(songIds);
+        List<SongDto> songDtos=new ArrayList<>();
+        for (Song song : IterableSong) {
+            SongDto songDto=mapToSongDto(song);
+            songDtos.add(songDto);
+        }
+        return songDtos;
+    }
 }

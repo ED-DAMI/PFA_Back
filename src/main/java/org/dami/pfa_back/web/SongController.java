@@ -2,11 +2,14 @@ package org.dami.pfa_back.web;
 
 import org.dami.pfa_back.DTO.ListenDurationDto;
 import org.dami.pfa_back.DTO.SongDto;
+import org.dami.pfa_back.Documents.Enums.Interaction;
 import org.dami.pfa_back.Documents.Song; // Pour GET by ID et retour d'upload
 // Votre exception personnalisée
 import org.dami.pfa_back.Documents.History;
+import org.dami.pfa_back.Documents.UserIntraction;
 import org.dami.pfa_back.Security.JwtUtil;
 import org.dami.pfa_back.Services.FileStorageService;
+import org.dami.pfa_back.Services.KafkaService;
 import org.dami.pfa_back.Services.SongService;
 import org.dami.pfa_back.Services.HistoryService;
 import org.slf4j.Logger;
@@ -24,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -36,13 +40,15 @@ public class SongController {
     private final  JwtUtil jwtUtil;
 
     private final  HistoryService historyService;
+    private final KafkaService kafkaService;
 
-    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, HistoryService historyService) {
+    public SongController(SongService songService, FileStorageService fileStorageService, JwtUtil jwtUtil, HistoryService historyService, KafkaService kafkaService) {
         this.songService = songService;
         this.fileStorageService = fileStorageService;
         this.jwtUtil = jwtUtil;
 
         this.historyService = historyService;
+        this.kafkaService = kafkaService;
     }
 
     // Helper pour extraire le token Bearer
@@ -94,6 +100,8 @@ public class SongController {
        // String userId = jwtUtil.extractUserId(token);
         //System.out.println(recommendationService.getHybridRecommendations(userId, 10));
         List<SongDto> recommendations = songService.getRecommendations(token);
+        Collections.shuffle(recommendations);
+        recommendations=recommendations.stream().limit(5).toList();
         return ResponseEntity.ok(recommendations);
     }
 
@@ -292,7 +300,7 @@ public class SongController {
         try {
             songService.incrementViewCount(id, token);
             History history = new History(null, jwtUtil.extractUserId(token), id,0,new Date());
-
+            kafkaService.sendUserInteraction(new UserIntraction(jwtUtil.extractUserId(token),id,id, Interaction.VUE));
             historyService.save(history);
 
             return ResponseEntity.ok().build(); // Ou ResponseEntity.noContent().build()

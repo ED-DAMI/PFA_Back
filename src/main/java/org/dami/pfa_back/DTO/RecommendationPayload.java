@@ -8,39 +8,33 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true) // Pour ignorer les champs JSON non mappés
 public class RecommendationPayload {
     private String userId;
-    private List<String> songIds;
+    private List<SongDto> songs;
 
     // Constructeur par défaut (requis par Jackson pour la désérialisation)
     public RecommendationPayload() {
     }
 
-    public RecommendationPayload(String userId, List<String> songIds) {
-        this.userId = userId;
-        this.songIds = songIds;
-    }
-
-    // Getters et Setters
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public RecommendationPayload setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
-    public List<String> getSongIds() {
-        return songIds;
+    public RecommendationPayload(String userId, List<SongDto> songs) {
+        this.userId = userId;
+        this.songs = songs;
     }
 
-    public void setSongIds(List<String> songIds) {
-        this.songIds = songIds;
+    public List<SongDto> getSongs() {
+        return songs;
     }
 
-    @Override
-    public String toString() {
-        return "RecommendationPayload{" +
-                "userId='" + userId + '\'' +
-                ", songIds=" + songIds +
-                '}';
+    public RecommendationPayload setSongs(List<SongDto> songs) {
+        this.songs = songs;
+        return this;
     }
 }
+

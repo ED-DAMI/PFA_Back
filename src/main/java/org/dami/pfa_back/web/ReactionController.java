@@ -62,7 +62,7 @@ public class ReactionController {
             return ResponseEntity.ok(reaction);
         }
         UserIntraction userIntraction=new UserIntraction(reactorId,songId,reaction.getSongId(), Interaction.REACTION);
-        kafkaService.sendUserInteraction(userIntraction);
+         kafkaService.sendUserInteraction(userIntraction);
         reactionService.deleteReaction(reaction);
         return saveReaction(songId, emojiEnum, reactorId);
     }

@@ -40,4 +40,19 @@ public class PlaylistService {
         playlistRepo.save(playlist);
 
     }
+
+    public void deletePlaylistById(String playlistId, String userId) {
+        playlistRepo.deleteById(playlistId);
+    }
+
+    public Playlist renamePlaylist(String playlistId, String name, String userId) {
+        Optional<Playlist> byId = playlistRepo.findById(playlistId);
+        if (byId.isPresent()) {
+            Playlist playlist = byId.get();
+            playlist.setName(name);
+            playlistRepo.save(playlist);
+            return playlist;
+        }
+        return null;
+    }
 }

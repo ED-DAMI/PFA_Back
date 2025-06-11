@@ -1,9 +1,11 @@
 package org.dami.pfa_back.web;
 
 import org.dami.pfa_back.DTO.LoginRequest;
+import org.dami.pfa_back.DTO.SignupRequest;
 import org.dami.pfa_back.Documents.User;
 import org.dami.pfa_back.Repository.UserRepo;
 import org.dami.pfa_back.Security.JwtUtil;
+import org.dami.pfa_back.Services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,4 +44,18 @@ public class AuthController {
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody SignupRequest signupRequest){
+        User user=new User();
+        user.setEmail(signupRequest.getEmail());
+        user.setPassword(signupRequest.password);
+        user.setUsername(signupRequest.name);
+        user=userRepo.save(user);
+        return ResponseEntity.ok(user);
+    }
+
 }
+
+

@@ -61,7 +61,6 @@ public class UserController {
                 .toList());
                 songs.forEach(s->{
                     History history = historyRepo.findBySongIdAndUserId(s.getId(), userId);
-                    System.out.println("history = " + history);
                     s.setListenedAt(history.getDate());
                 });
         songs.sort(Comparator.comparing(SongDto::getListenedAt));
